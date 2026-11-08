@@ -1,0 +1,30 @@
+# ---------- Python / Backend ----------
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# ---------- Node / Frontend ----------
+node_modules/
+dist/
+build/
+
+# ---------- Environment variables (SECRETS!) ----------
+.env
+.env.*
+!.env.example
+
+# ---------- Postman local workspace files ----------
+.postman/
+postman/
+
+# ---------- Editors and OS ----------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ---------- Logs ----------
+*.log
