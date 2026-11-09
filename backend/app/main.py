@@ -7,6 +7,7 @@ from app.core.config import settings
 from app.db.database import Base, engine, get_db
 from app.routers import categories
 from app.routers import categories, products
+from app.routers import auth, categories, products
 
 # Create the tables that don't exist yet.
 Base.metadata.create_all(bind=engine)
@@ -17,6 +18,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
+app.include_router(auth.router)
 app.include_router(categories.router)
 app.include_router(products.router)
 
