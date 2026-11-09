@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 import app.models  # noqa: F401  (registers the models)
 from app.core.config import settings
 from app.db.database import Base, engine, get_db
+from app.routers import categories
 
 # Create the tables that don't exist yet.
 Base.metadata.create_all(bind=engine)
@@ -14,6 +15,8 @@ app = FastAPI(
     description="Backend API for the food e-commerce platform",
     version="0.1.0",
 )
+
+app.include_router(categories.router)
 
 
 @app.get("/")
