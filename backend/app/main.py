@@ -6,6 +6,7 @@ import app.models  # noqa: F401  (registers the models)
 from app.core.config import settings
 from app.db.database import Base, engine, get_db
 from app.routers import categories
+from app.routers import categories, products
 
 # Create the tables that don't exist yet.
 Base.metadata.create_all(bind=engine)
@@ -17,7 +18,7 @@ app = FastAPI(
 )
 
 app.include_router(categories.router)
-
+app.include_router(products.router)
 
 @app.get("/")
 def read_root():
