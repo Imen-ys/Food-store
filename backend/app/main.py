@@ -2,8 +2,12 @@ from fastapi import Depends, FastAPI
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+import app.models  # noqa: F401  (registers the models)
 from app.core.config import settings
-from app.db.database import get_db
+from app.db.database import Base, engine, get_db
+
+# Create the tables that don't exist yet.
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=settings.app_name,
