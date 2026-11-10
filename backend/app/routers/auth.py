@@ -7,6 +7,7 @@ from app.core.security import create_access_token, hash_password, verify_passwor
 from app.db.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin, UserRead
+from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -60,3 +61,7 @@ def login(data: UserLogin, response: Response, db: Session = Depends(get_db)):
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(response: Response):
     response.delete_cookie(key=COOKIE_NAME, path="/")
+
+@router.get("/me", response_model=UserRead)
+def read_current_user(user: User = Depends(get_current_user)):
+    return user

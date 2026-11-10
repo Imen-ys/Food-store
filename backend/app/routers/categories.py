@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.models.category import Category
 from app.schemas.category import CategoryCreate, CategoryRead
+from app.core.dependencies import get_current_admin
 
 # prefix="/categories": All URLs start with /categories.
 # tags=["Categories"]: Groups them under Categories in Swagger documentation.
@@ -58,7 +59,8 @@ def get_category(category_id: int, db: Session = Depends(get_db)):
 # 6. db.refresh() → Gets the updated database data, including the generated ID.
 # 7. Returns the new category.
 # Example URL: POST /categories
-@router.post("", response_model=CategoryRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=CategoryRead, status_code=status.HTTP_201_CREATED,
+            dependencies=[Depends(get_current_admin)])
 def create_category(data: CategoryCreate, db: Session = Depends(get_db)):
     ensure_name_is_free(data.name, db)
     category = Category(name=data.name, description=data.description)
@@ -73,7 +75,7 @@ def create_category(data: CategoryCreate, db: Session = Depends(get_db)):
 # 4. Saves the changes.
 # 5. Returns the updated category.
 # Example URL: PUT /categories/1
-@router.put("/{category_id}", response_model=CategoryRead)
+@router.put("/{category_id}", response_model=CategoryRead,dependencies=[Depends(get_current_admin)])
 def update_category(
     category_id: int, data: CategoryCreate, db: Session = Depends(get_db)
 ):
@@ -91,7 +93,7 @@ def update_category(
 # 4. Otherwise, deletes the category.
 # 5. Saves the changes.
 # Example URL: DELETE /categories/1
-@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT,dependencies=[Depends(get_current_admin)])
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     category = get_category_or_404(category_id, db)
     if category.products:
