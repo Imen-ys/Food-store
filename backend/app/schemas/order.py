@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
-
+from typing import Literal
 
 # Product information sent by customer
 class OrderItemCreate(BaseModel):
@@ -42,3 +42,18 @@ class OrderRead(BaseModel):
     notes: str | None = None
     created_at: datetime
     items: list[OrderItemRead]
+
+class OrderStatusUpdate(BaseModel):
+    status: Literal[
+        "pending",
+        "confirmed",
+        "preparing",
+        "out_for_delivery",
+        "delivered",
+        "cancelled",
+    ]
+
+
+class OrderList(BaseModel):
+    items: list[OrderRead]
+    total: int
