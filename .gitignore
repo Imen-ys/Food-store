@@ -30,3 +30,5 @@ Thumbs.db
 *.log
 # ---------- Local database ----------
 *.db
+# ---------- Uploaded files ----------
+uploads/

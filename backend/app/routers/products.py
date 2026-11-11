@@ -1,12 +1,23 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    HTTPException,
+    Query,
+    UploadFile,
+    status,
+)
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_admin
+from app.core.storage import delete_product_image_file, save_product_image
 from app.db.database import get_db
 from app.models.category import Category
 from app.models.order_item import OrderItem
 from app.models.product import Product
-from app.schemas.product import ProductCreate, ProductList, ProductRead
+from app.models.product_image import ProductImage
+from app.schemas.product import ProductCreate, ProductImageRead, ProductList, ProductRead
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -95,3 +106,81 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
         )
     db.delete(product)
     db.commit()
+
+MAX_IMAGES_PER_PRODUCT = 8
+
+
+def get_image_or_404(product_id: int, image_id: int, db: Session) -> ProductImage:
+    image = db.get(ProductImage, image_id)
+    if image is None or image.product_id != product_id:
+        raise HTTPException(status_code=404, detail="Image not found")
+    return image
+
+
+@router.post(
+    "/{product_id}/images",
+    response_model=ProductImageRead,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(get_current_admin)],
+)
+async def upload_product_image(
+    product_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    product = get_product_or_404(product_id, db)
+    if len(product.images) >= MAX_IMAGES_PER_PRODUCT:
+        raise HTTPException(
+            status_code=409,
+            detail=f"A product can have at most {MAX_IMAGES_PER_PRODUCT} images",
+        )
+
+    image_url = await save_product_image(file)
+    image = ProductImage(
+        product_id=product.id,
+        image_url=image_url,
+        is_main=len(product.images) == 0,  # the first image is the main one
+        position=max((i.position for i in product.images), default=-1) + 1,
+    )
+    db.add(image)
+    db.commit()
+    db.refresh(image)
+    return image
+
+
+@router.patch(
+    "/{product_id}/images/{image_id}/main",
+    response_model=ProductImageRead,
+    dependencies=[Depends(get_current_admin)],
+)
+def set_main_image(product_id: int, image_id: int, db: Session = Depends(get_db)):
+    product = get_product_or_404(product_id, db)
+    image = get_image_or_404(product_id, image_id, db)
+    for other in product.images:
+        other.is_main = other.id == image.id
+    db.commit()
+    db.refresh(image)
+    return image
+
+
+@router.delete(
+    "/{product_id}/images/{image_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(get_current_admin)],
+)
+def delete_product_image(
+    product_id: int, image_id: int, db: Session = Depends(get_db)
+):
+    product = get_product_or_404(product_id, db)
+    image = get_image_or_404(product_id, image_id, db)
+    image_url = image.image_url
+    was_main = image.is_main
+
+    db.delete(image)
+    db.flush()  # apply the delete so product.images is up to date
+    db.refresh(product)
+    if was_main and product.images:
+        product.images[0].is_main = True  # promote the next image
+    db.commit()
+
+    delete_product_image_file(image_url)  # remove the file after the DB succeeded
