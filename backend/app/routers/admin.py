@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -7,7 +7,7 @@ from app.db.database import get_db
 from app.models.order import Order
 from app.models.product import Product
 from app.models.user import User
-from app.schemas.admin import DashboardStats
+from app.schemas.admin import CustomerList, DashboardStats
 
 router = APIRouter(
     prefix="/admin",
@@ -59,3 +59,45 @@ def get_stats(db: Session = Depends(get_db)):
         "orders_by_status": orders_by_status,
         "low_stock_products": low_stock_products,
     }
+
+@router.get("/customers", response_model=CustomerList)
+def list_customers(
+    search: str | None = None,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    base = select(User).where(User.role == "customer")
+    if search:
+        base = base.where(
+            User.full_name.ilike(f"%{search}%") | User.email.ilike(f"%{search}%")
+        )
+
+    total = db.scalar(select(func.count()).select_from(base.subquery()))
+    customers = db.scalars(
+        base.order_by(User.id.desc()).offset(skip).limit(limit)
+    ).all()
+
+    items = []
+    for customer in customers:
+        orders_count = db.scalar(
+            select(func.count(Order.id)).where(Order.user_id == customer.id)
+        )
+        total_spent = db.scalar(
+            select(func.coalesce(func.sum(Order.total_amount), 0)).where(
+                Order.user_id == customer.id, Order.status == "delivered"
+            )
+        )
+        items.append(
+            {
+                "id": customer.id,
+                "full_name": customer.full_name,
+                "email": customer.email,
+                "phone": customer.phone,
+                "is_active": customer.is_active,
+                "created_at": customer.created_at,
+                "orders_count": orders_count,
+                "total_spent": total_spent,
+            }
+        )
+    return {"items": items, "total": total}
