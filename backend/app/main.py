@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 import app.models  # noqa: F401  (registers the models)
 from app.core.config import settings
 from app.db.database import Base, engine, get_db
-from app.routers import auth, categories, orders, products
+from app.routers import admin, auth, categories, orders, products
 
 # Create the tables that don't exist yet.
 Base.metadata.create_all(bind=engine)
@@ -20,6 +20,7 @@ app.include_router(auth.router)
 app.include_router(categories.router)
 app.include_router(orders.router)
 app.include_router(products.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def read_root():
