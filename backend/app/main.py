@@ -8,6 +8,7 @@ from app.db.database import Base, engine, get_db
 from app.routers import admin, auth, categories, orders, products
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 # Create the tables that don't exist yet.
 Base.metadata.create_all(bind=engine)
@@ -17,6 +18,14 @@ app = FastAPI(
     description="Backend API for the food e-commerce platform",
     version="0.1.0",
 )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.frontend_url],  # exact origin, never "*" with cookies
+    allow_credentials=True,                 # allow the login cookie
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allow_headers=["Content-Type"],
+)
+
 Path("uploads").mkdir(exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
