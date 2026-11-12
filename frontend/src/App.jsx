@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import Products from './pages/Products'
 import ProductDetails from './pages/ProductDetails'
+import Cart from './pages/Cart'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

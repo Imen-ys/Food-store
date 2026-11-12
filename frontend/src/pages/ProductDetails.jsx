@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import api, { API_URL } from '../api/client'
+import { useCart } from '../context/CartContext'
 
 function ProductDetails() {
   const { id } = useParams()
@@ -8,6 +9,9 @@ function ProductDetails() {
   const [selectedImageId, setSelectedImageId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { addItem } = useCart()
+  const [quantity, setQuantity] = useState(1)
+  const [added, setAdded] = useState(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -16,6 +20,8 @@ function ProductDetails() {
       setLoading(true)
       setError('')
       setProduct(null)
+      setQuantity(1)
+      setAdded(false)
       try {
         const { data } = await api.get(`/products/${id}`, {
           signal: controller.signal,
@@ -66,7 +72,12 @@ function ProductDetails() {
     stockText = 'In stock'
     stockClass = 'text-green-600'
   }
+  const maxQuantity = Math.max(1, Math.min(product.stock_quantity, 50))
 
+  function handleAdd() {
+    addItem(product, quantity)
+    setAdded(true)
+  }
   return (
     <section>
       <Link to="/products" className="text-sm text-amber-700 underline">
@@ -119,7 +130,44 @@ function ProductDetails() {
             {product.price} DZD
           </p>
           <p className={`mt-1 text-sm font-medium ${stockClass}`}>{stockText}</p>
-
+          {inStock && (
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <div className="flex items-center rounded-full border border-amber-300 bg-white">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="px-4 py-2 text-lg"
+                >
+                  −
+                </button>
+                <span className="w-8 text-center font-medium">{quantity}</span>
+                <button
+                  type="button"
+                  aria-label="Increase quantity"
+                  onClick={() => setQuantity((q) => Math.min(maxQuantity, q + 1))}
+                  className="px-4 py-2 text-lg"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-2 rounded-full transition"
+              >
+                Add to cart
+              </button>
+            </div>
+          )}
+          {added && (
+            <p className="mt-2 text-sm text-green-700">
+              Added to cart.{' '}
+              <Link to="/cart" className="underline">
+                View cart
+              </Link>
+            </p>
+          )}
           {product.description && (
             <p className="mt-4 text-gray-600">{product.description}</p>
           )}
