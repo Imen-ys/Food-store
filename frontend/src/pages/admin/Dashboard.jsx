@@ -52,12 +52,20 @@ function Dashboard() {
   return (
     <section>
       <h1 className="text-3xl font-bold text-amber-700">Admin Dashboard</h1>
-      <Link
-        to="/admin/orders"
-        className="mt-4 inline-block rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
-      >
-        Manage orders
-      </Link>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <Link
+          to="/admin/orders"
+          className="rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+        >
+          Manage orders
+        </Link>
+        <Link
+          to="/admin/products"
+          className="rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+        >
+          Manage products
+        </Link>
+      </div>
 
       {loading && <p className="mt-6 text-gray-500">Loading statistics...</p>}
       {error && <p className="mt-6 rounded-lg bg-red-50 p-4 text-red-700">{error}</p>}
