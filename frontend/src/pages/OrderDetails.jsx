@@ -95,7 +95,7 @@ function OrderDetails() {
             {order.items.map((item) => (
               <li key={item.product_id} className="flex justify-between gap-2">
                 <span>
-                  {item.quantity} × Product #{item.product_id}
+                    {item.quantity} × {item.product_name}
                 </span>
                 <span>{item.unit_price * item.quantity} DZD</span>
               </li>

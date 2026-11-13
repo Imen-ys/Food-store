@@ -24,6 +24,7 @@ class OrderItemRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     product_id: int
+    product_name: str
     quantity: int
     unit_price: int
 
