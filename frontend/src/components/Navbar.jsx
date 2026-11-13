@@ -50,6 +50,9 @@ function Navbar() {
 
           {!loading && user && (
             <>
+              <NavLink to="/orders" className={linkClass}>
+                My orders
+              </NavLink>
               <span className="px-3 text-sm text-gray-600">
                 Hi, {user.full_name.split(' ')[0]}
               </span>

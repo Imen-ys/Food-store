@@ -10,6 +10,8 @@ import Register from './pages/Register'
 import ProtectedRoute from './components/ProtectedRoute'
 import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
+import MyOrders from './pages/MyOrders'
+import OrderDetails from './pages/OrderDetails'
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/orders" element={<MyOrders />} />
+          <Route path="/orders/:id" element={<OrderDetails />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
