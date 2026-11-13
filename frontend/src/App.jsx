@@ -12,6 +12,8 @@ import Checkout from './pages/Checkout'
 import OrderSuccess from './pages/OrderSuccess'
 import MyOrders from './pages/MyOrders'
 import OrderDetails from './pages/OrderDetails'
+import AdminRoute from './components/AdminRoute'
+import Dashboard from './pages/admin/Dashboard'
 
 function App() {
   return (
@@ -28,6 +30,9 @@ function App() {
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="/orders/:id" element={<OrderDetails />} />
+        </Route>
+        <Route element={<AdminRoute />}>
+          <Route path="/admin" element={<Dashboard />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

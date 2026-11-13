@@ -48,8 +48,14 @@ function Navbar() {
             </>
           )}
 
+
           {!loading && user && (
             <>
+              {user.role === 'admin' && (
+                <NavLink to="/admin" className={linkClass}>
+                  Admin
+                </NavLink>
+              )}
               <NavLink to="/orders" className={linkClass}>
                 My orders
               </NavLink>
