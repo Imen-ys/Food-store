@@ -14,6 +14,7 @@ import MyOrders from './pages/MyOrders'
 import OrderDetails from './pages/OrderDetails'
 import AdminRoute from './components/AdminRoute'
 import Dashboard from './pages/admin/Dashboard'
+import AdminOrders from './pages/admin/AdminOrders'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         </Route>
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

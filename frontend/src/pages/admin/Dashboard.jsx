@@ -3,6 +3,7 @@ import api from '../../api/client'
 import { getErrorMessage } from '../../api/errors'
 import StatusBadge from '../../components/StatusBadge'
 import { ORDER_STEPS } from '../../utils/orderStatus'
+import { Link } from 'react-router'
 
 const STATUS_ORDER = [...ORDER_STEPS, 'cancelled']
 
@@ -51,6 +52,12 @@ function Dashboard() {
   return (
     <section>
       <h1 className="text-3xl font-bold text-amber-700">Admin Dashboard</h1>
+      <Link
+        to="/admin/orders"
+        className="mt-4 inline-block rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+      >
+        Manage orders
+      </Link>
 
       {loading && <p className="mt-6 text-gray-500">Loading statistics...</p>}
       {error && <p className="mt-6 rounded-lg bg-red-50 p-4 text-red-700">{error}</p>}
