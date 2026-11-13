@@ -1,17 +1,19 @@
 import { useState } from 'react'
-import { Link, Navigate } from 'react-router'
+import { Link, Navigate , useLocation} from 'react-router'
 import { getErrorMessage } from '../api/errors'
 import { useAuth } from '../context/AuthContext'
 
 function Login() {
-  const { user, loading, login } = useAuth()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [submitting, setSubmitting] = useState(false)
+    const location = useLocation()
+    const redirectTo = location.state?.from || '/'
+    const { user, loading, login } = useAuth()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
+    const [submitting, setSubmitting] = useState(false)
 
   // Already logged in (or just logged in): leave this page
-  if (!loading && user) return <Navigate to="/" replace />
+if (!loading && user) return <Navigate to={redirectTo} replace />
 
   async function handleSubmit(event) {
     event.preventDefault()

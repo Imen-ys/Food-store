@@ -101,13 +101,12 @@ function Cart() {
             <span>Total</span>
             <span>{subtotal} DZD</span>
           </div>
-          <button
-            type="button"
-            disabled
-            className="mt-6 w-full rounded-full bg-amber-300 px-6 py-2 font-semibold text-white cursor-not-allowed"
+          <Link
+            to="/checkout"
+            className="mt-6 block w-full rounded-full bg-amber-600 px-6 py-2 text-center font-semibold text-white transition hover:bg-amber-700"
           >
-            Checkout (coming next)
-          </button>
+            Checkout
+          </Link>
           <button
             type="button"
             onClick={clearCart}

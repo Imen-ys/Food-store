@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Navigate } from 'react-router'
+import { Link, Navigate, useLocation } from 'react-router'
 import { getErrorMessage } from '../api/errors'
 import { useAuth } from '../context/AuthContext'
 
@@ -7,6 +7,8 @@ const inputClass =
   'mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-600 focus:outline-none'
 
 function Register() {
+    const location = useLocation()
+    const redirectTo = location.state?.from || '/'
   const { user, loading, register } = useAuth()
   const [form, setForm] = useState({
     full_name: '',
@@ -18,7 +20,7 @@ function Register() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  if (!loading && user) return <Navigate to="/" replace />
+if (!loading && user) return <Navigate to={redirectTo} replace />
 
   function handleChange(event) {
     setForm((prev) => ({ ...prev, [event.target.name]: event.target.value }))
