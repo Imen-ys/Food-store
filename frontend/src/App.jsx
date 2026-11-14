@@ -16,6 +16,7 @@ import AdminRoute from './components/AdminRoute'
 import Dashboard from './pages/admin/Dashboard'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminProducts from './pages/admin/AdminProducts'
+import ProductForm from './pages/admin/ProductForm'
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/products/new" element={<ProductForm />} />
+          <Route path="/admin/products/:id/edit" element={<ProductForm />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Route>

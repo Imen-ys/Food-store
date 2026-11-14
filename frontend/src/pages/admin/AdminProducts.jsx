@@ -108,7 +108,12 @@ function AdminProducts() {
         ← Back to dashboard
       </Link>
       <h1 className="mt-2 text-3xl font-bold text-amber-700">Manage Products</h1>
-
+      <Link
+        to="/admin/products/new"
+        className="mt-4 inline-block rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+      >
+        + Add product
+      </Link>
       <form onSubmit={handleSearch} className="mt-6 flex gap-2">
         <input
           type="search"
@@ -183,6 +188,12 @@ function AdminProducts() {
                     >
                       {product.is_available ? 'Hide' : 'Show'}
                     </button>
+                    <Link
+                      to={`/admin/products/${product.id}/edit`}
+                      className="text-amber-700 underline"
+                    >
+                      Edit
+                    </Link>
                     <button
                       type="button"
                       disabled={busyId === product.id}
