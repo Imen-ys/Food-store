@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import api from '../../api/client'
 import { getErrorMessage } from '../../api/errors'
+import ProductImages from '../../components/admin/ProductImages'
 
 const inputClass =
   'mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-600 focus:outline-none'
@@ -101,15 +102,16 @@ function ProductForm() {
     }
 
     try {
-      if (isEdit) {
+    if (isEdit) {
         await api.put(`/products/${id}`, payload)
-      } else {
-        await api.post('/products', payload)
-      }
-      navigate('/admin/products')
+        navigate('/admin/products')
+    } else {
+        const { data } = await api.post('/products', payload)
+        navigate(`/admin/products/${data.id}/edit`) // add images next
+    }
     } catch (err) {
-      setError(getErrorMessage(err))
-      setSubmitting(false)
+        setError(getErrorMessage(err))
+        setSubmitting(false)
     }
   }
 
@@ -219,6 +221,7 @@ function ProductForm() {
           {submitting ? 'Saving...' : isEdit ? 'Save changes' : 'Create product'}
         </button>
       </form>
+      {isEdit && <ProductImages productId={id} />}
     </section>
   )
 }
