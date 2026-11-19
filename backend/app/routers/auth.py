@@ -6,7 +6,7 @@ from app.core.config import settings
 from app.core.security import create_access_token, hash_password, verify_password
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin, UserRead
+from app.schemas.user import UserCreate, UserLogin, UserRead, UserUpdate
 from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -64,4 +64,16 @@ def logout(response: Response):
 
 @router.get("/me", response_model=UserRead)
 def read_current_user(user: User = Depends(get_current_user)):
+    return user
+
+@router.put("/me", response_model=UserRead)
+def update_current_user(
+    data: UserUpdate,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    user.full_name = data.full_name
+    user.phone = data.phone
+    db.commit()
+    db.refresh(user)
     return user

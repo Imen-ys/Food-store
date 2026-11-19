@@ -17,6 +17,7 @@ import Dashboard from './pages/admin/Dashboard'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminProducts from './pages/admin/AdminProducts'
 import ProductForm from './pages/admin/ProductForm'
+import Profile from './pages/Profile'
 
 function App() {
   return (
@@ -28,12 +29,15 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
         <Route element={<ProtectedRoute />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="/orders/:id" element={<OrderDetails />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
+
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
@@ -41,6 +45,7 @@ function App() {
           <Route path="/admin/products/new" element={<ProductForm />} />
           <Route path="/admin/products/:id/edit" element={<ProductForm />} />
         </Route>
+
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

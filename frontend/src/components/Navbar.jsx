@@ -60,7 +60,9 @@ function Navbar() {
                 My orders
               </NavLink>
               <span className="px-3 text-sm text-gray-600">
-                Hi, {user.full_name.split(' ')[0]}
+                <NavLink to="/profile" className={linkClass}>
+                  Hi, {user.full_name.split(' ')[0]}
+                </NavLink>
               </span>
               <button
                 type="button"

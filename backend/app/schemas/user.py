@@ -29,3 +29,9 @@ class UserRead(BaseModel):
     role: str
     is_active: bool
     created_at: datetime
+
+class UserUpdate(BaseModel):
+    """Fields a user may change. Note: no role, email, or is_active."""
+
+    full_name: str = Field(min_length=2, max_length=100)
+    phone: str | None = Field(default=None, pattern=r"^\+?[0-9 ]{8,15}$")
