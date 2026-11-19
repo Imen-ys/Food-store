@@ -69,8 +69,14 @@ function Dashboard() {
           to="/admin/categories"
           className="rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
         >
-  Manage categories
-</Link>
+          Manage categories
+        </Link>
+        <Link
+          to="/admin/customers"
+          className="rounded-full bg-amber-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-amber-700"
+        >
+          View customers
+        </Link>
       </div>
 
       {loading && <p className="mt-6 text-gray-500">Loading statistics...</p>}
