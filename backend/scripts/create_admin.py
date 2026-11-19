@@ -4,12 +4,11 @@ from sqlalchemy import select
 
 import app.models  # noqa: F401  (registers the models)
 from app.core.security import hash_password
-from app.db.database import Base, SessionLocal, engine
+from app.db.database import SessionLocal
 from app.models.user import User
 
 
 def main():
-    Base.metadata.create_all(bind=engine)
 
     full_name = input("Full name: ").strip()
     email = input("Email: ").strip().lower()
