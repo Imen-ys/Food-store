@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { getErrorMessage } from '../api/errors'
 import { useAuth } from '../context/AuthContext'
 import { formatDate } from '../utils/orderStatus'
+import ChangePasswordForm from '../components/ChangePasswordForm'
 
 const inputClass =
   'mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-600 focus:outline-none'
@@ -86,6 +87,7 @@ function Profile() {
           {submitting ? 'Saving...' : 'Save changes'}
         </button>
       </form>
+      <ChangePasswordForm />
     </section>
   )
 }

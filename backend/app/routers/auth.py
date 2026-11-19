@@ -6,7 +6,13 @@ from app.core.config import settings
 from app.core.security import create_access_token, hash_password, verify_password
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin, UserRead, UserUpdate
+from app.schemas.user import (
+    PasswordChange,
+    UserCreate,
+    UserLogin,
+    UserRead,
+    UserUpdate,
+)
 from app.core.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -77,3 +83,19 @@ def update_current_user(
     db.commit()
     db.refresh(user)
     return user
+
+@router.post("/change-password", status_code=status.HTTP_204_NO_CONTENT)
+def change_password(
+    data: PasswordChange,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    if not verify_password(data.current_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if data.new_password == data.current_password:
+        raise HTTPException(
+            status_code=400,
+            detail="The new password must be different from the current one",
+        )
+    user.hashed_password = hash_password(data.new_password)
+    db.commit()

@@ -35,3 +35,7 @@ class UserUpdate(BaseModel):
 
     full_name: str = Field(min_length=2, max_length=100)
     phone: str | None = Field(default=None, pattern=r"^\+?[0-9 ]{8,15}$")
+
+class PasswordChange(BaseModel):
+    current_password: str = Field(min_length=1, max_length=72)
+    new_password: str = Field(min_length=8, max_length=72)
