@@ -10,8 +10,11 @@ is_sqlite = settings.database_url.startswith("sqlite")
 # SQLite needs this option because FastAPI may use several threads.
 connect_args = {"check_same_thread": False} if is_sqlite else {}
 
-engine = create_engine(settings.database_url, connect_args=connect_args)
-
+engine = create_engine(
+    settings.database_url,
+    connect_args=connect_args,
+    pool_pre_ping=True,  # test connections first (Neon suspends idle databases)
+)
 # SQLite ignores foreign keys by default. This turns them ON
 # every time a connection is opened, like PostgreSQL does.
 if is_sqlite:
