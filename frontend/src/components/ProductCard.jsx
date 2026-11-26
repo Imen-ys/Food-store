@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { API_URL } from '../api/client'
+import { imageUrl } from '../api/client'
 
 function ProductCard({ product }) {
   const image =
@@ -13,7 +13,7 @@ function ProductCard({ product }) {
       <article className="h-full bg-white rounded-2xl shadow-sm hover:shadow-md transition overflow-hidden flex flex-col">
         {image ? (
           <img
-            src={`${API_URL}${image.image_url}`}
+            src={imageUrl(image.image_url)}
             alt={product.name}
             className="h-48 w-full object-cover"
           />

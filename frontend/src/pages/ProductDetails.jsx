@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import api, { API_URL } from '../api/client'
+import api, { imageUrl } from '../api/client'
 import { useCart } from '../context/CartContext'
 
 function ProductDetails() {
@@ -89,7 +89,7 @@ function ProductDetails() {
         <div>
           {selectedImage ? (
             <img
-              src={`${API_URL}${selectedImage.image_url}`}
+              src={imageUrl(selectedImage.image_url)}
               alt={product.name}
               className="w-full aspect-square object-cover rounded-2xl bg-white"
             />
@@ -113,7 +113,7 @@ function ProductDetails() {
                   }`}
                 >
                   <img
-                    src={`${API_URL}${img.image_url}`}
+                    src={imageUrl(img.image_url)}
                     alt=""
                     className="h-16 w-16 object-cover"
                   />

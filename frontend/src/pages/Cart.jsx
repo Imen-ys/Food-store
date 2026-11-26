@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { API_URL } from '../api/client'
+import { imageUrl } from '../api/client'
 import { useCart } from '../context/CartContext'
 
 function Cart() {
@@ -33,7 +33,7 @@ function Cart() {
             >
               {item.imageUrl ? (
                 <img
-                  src={`${API_URL}${item.imageUrl}`}
+                  src={imageUrl(item.imageUrl)}
                   alt={item.name}
                   className="h-20 w-20 rounded-lg object-cover"
                 />

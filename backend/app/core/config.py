@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60
     cookie_secure: bool = False
 
+    # Image storage (empty = save images on the local disk)
+    cloudinary_cloud_name: str = ""
+    cloudinary_api_key: str = ""
+    cloudinary_api_secret: str = ""
+
     model_config = SettingsConfigDict(env_file=".env")
 
 

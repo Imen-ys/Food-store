@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import api, { API_URL } from '../../api/client'
+import api, { imageUrl } from '../../api/client'
 import { getErrorMessage } from '../../api/errors'
 
 const MAX_SIZE = 5 * 1024 * 1024
@@ -117,7 +117,7 @@ function ProductImages({ productId }) {
               <li key={image.id} className="overflow-hidden rounded-xl border border-gray-200">
                 <div className="relative">
                   <img
-                    src={`${API_URL}${image.image_url}`}
+                    src={imageUrl(image.image_url)}
                     alt=""
                     className="h-32 w-full object-cover"
                   />

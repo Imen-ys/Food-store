@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import api, { API_URL } from '../../api/client'
+import api, { imageUrl } from '../../api/client'
 import { getErrorMessage } from '../../api/errors'
 
 const PAGE_SIZE = 10
@@ -154,7 +154,7 @@ function AdminProducts() {
                 >
                   {image ? (
                     <img
-                      src={`${API_URL}${image.image_url}`}
+                      src={imageUrl(image.image_url)}
                       alt={product.name}
                       className="h-16 w-16 rounded-lg object-cover"
                     />
