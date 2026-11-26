@@ -57,7 +57,7 @@ def login(data: UserLogin, response: Response, db: Session = Depends(get_db)):
         value=token,
         httponly=True,
         secure=settings.cookie_secure,
-        samesite="lax",
+        samesite=settings.cookie_samesite,
         max_age=settings.access_token_expire_minutes * 60,
         path="/",
     )
@@ -66,7 +66,13 @@ def login(data: UserLogin, response: Response, db: Session = Depends(get_db)):
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(response: Response):
-    response.delete_cookie(key=COOKIE_NAME, path="/")
+    response.delete_cookie(
+        key=COOKIE_NAME,
+        path="/",
+        secure=settings.cookie_secure,
+        httponly=True,
+        samesite=settings.cookie_samesite,
+    )
 
 @router.get("/me", response_model=UserRead)
 def read_current_user(user: User = Depends(get_current_user)):

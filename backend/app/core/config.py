@@ -1,3 +1,6 @@
+from typing import Literal
+
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,6 +15,8 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
     cookie_secure: bool = False
+    # "lax" locally. In production (frontend and backend on different sites): "none"
+    cookie_samesite: Literal["lax", "strict", "none"] = "lax"
 
     # Image storage (empty = save images on the local disk)
     cloudinary_cloud_name: str = ""
@@ -19,6 +24,15 @@ class Settings(BaseSettings):
     cloudinary_api_secret: str = ""
 
     model_config = SettingsConfigDict(env_file=".env")
+
+    @field_validator("database_url")
+    @classmethod
+    def use_psycopg_driver(cls, value: str) -> str:
+        """Accept Neon's 'postgresql://' and make SQLAlchemy use psycopg."""
+        for prefix in ("postgres://", "postgresql://"):
+            if value.startswith(prefix):
+                return "postgresql+psycopg://" + value[len(prefix):]
+        return value
 
 
 settings = Settings()
